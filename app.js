@@ -131,11 +131,12 @@ app.post("/reminder", (req,res)=>{
     const {emails, message, names} = req.body;
     let i = 0
     let interval = setInterval(()=>{
+      if(emails.length === i){
+        clearInterval(interval)
+      }
         sendReminder(emails[i], message, names[i]);
         console.log(i, emails[i])
-        if(emails.length === i){
-          sendReminder(email, message, name)
-        }
+       
         i++;
     }, 20000)
  
