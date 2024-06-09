@@ -128,8 +128,13 @@ app.post("/", (req,res)=>{
   res.json(req.body)
 })
 app.post("/reminder", (req,res)=>{
-    const {email, message, name} = req.body;
-    sendReminder(email, message, name)
+    const {emails, message, names} = req.body;
+    for(let i = 0; i < emails.length; i++){
+      setTimeout(()=>{
+        sendReminder(emails[i], message, names[i])
+        console.log(i, emails[i])
+      }, 20000)
+    }
     res.json(req.body)
 })
 app.listen(process.env.PORT || 3001, ()=>{
