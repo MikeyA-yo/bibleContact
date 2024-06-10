@@ -8,6 +8,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 const transport = nodemailer.createTransport({
+    pool:true,
+    maxConnections:10,
     host: process.env.MAIL_HOST,
     port: 587,
     secure: false, // secureConnection is not a valid property, use 'secure'
@@ -129,23 +131,21 @@ app.post("/", (req,res)=>{
 })
 app.post("/reminder", (req,res)=>{
     const {emails, message, names} = req.body;
-    let i = 0
-    let interval = setInterval(()=>{
-      if((emails.length - 1) === i){
-        clearInterval(interval)
-      }
-        sendReminder(emails[i], message, names[i]);
-        console.log(i, emails[i])
-       
-        i++;
-    }, 20000)
- 
-    // for(let i = 0; i < emails.length; i++){
-    //   setTimeout(()=>{
-    //     sendReminder(emails[i], message, names[i])
+    // let i = 0
+    // let interval = setInterval(()=>{
+    //   if((emails.length - 1) === i){
+    //     clearInterval(interval)
+    //   }
+    //     sendReminder(emails[i], message, names[i]);
     //     console.log(i, emails[i])
-    //   }, 20000)
-    // }
+       
+    //     i++;
+    // }, 20000)
+ 
+    for(let i = 0; i < emails.length; i++){
+        sendReminder(emails[i], message, names[i])
+        console.log(i, emails[i])
+    }
     res.json(req.body)
 })
 app.listen(process.env.PORT || 3001, ()=>{
