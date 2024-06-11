@@ -41,7 +41,7 @@ async function sendMessage({ name, email, tel, msg }) {
       });
 
   }
-
+ let emailsSent = []
   async function sendReminder(email, message, name) {
     const mailoptions = {
       from: process.env.EMAIL_SENDER,
@@ -119,6 +119,7 @@ async function sendMessage({ name, email, tel, msg }) {
       if (e) {
         console.error(e);
       } else {
+        emails.push(email)
         console.log(info.response);
       }
     });
@@ -147,7 +148,7 @@ app.post("/reminder", (req,res)=>{
         sendReminder(emails[i], message, names[i])
         console.log(i, emails[i])
     }
-    res.json(req.body)
+    res.json({emails: emailsSent})
 })
 app.listen(process.env.PORT || 3001, ()=>{
     console.log("Running on port ", process.env.PORT);
