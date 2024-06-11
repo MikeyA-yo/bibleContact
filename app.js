@@ -9,8 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const transport = nodemailer.createTransport({
     pool:true,
-    maxConnections:1,
-    rateLimit: 14, 
+    maxConnections:10,
     host: process.env.MAIL_HOST,
     port: 587,
     secure: false, // secureConnection is not a valid property, use 'secure'
