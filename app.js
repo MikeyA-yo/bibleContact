@@ -1,12 +1,18 @@
 const express = require("express")
 const app = express();
-const nodemailer = require("nodemailer")
+const cors = require("cors")
+const nodemailer = require("nodemailer");
+const yt = require("ytdl-core");
 require('dotenv').config()
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-
+app.use(cors({
+  origin:[
+    "http://localhost:5173"
+  ]
+}))
 const transport = nodemailer.createTransport({
     pool:true,
     maxConnections:1,
@@ -124,7 +130,40 @@ async function sendMessage({ name, email, tel, msg }) {
       }
     });
   }
+
+  function genRandom(len){
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let res = ''
+    for (let i = 0; i < len; i++){
+        let index = Math.floor(Math.random() * 62);
+        res += characters.charAt(index);
+    }
+    return res;
+}
+let filename = `${genRandom(12)}.mp4`  
   
+app.get("/ytl/dl",( req, res)=>{
+  if(req.query.link){
+    const {link} = req.query
+    const filter = req.query.filter === 'mp3' ? 'audioonly':'audioandvideo' ;
+    const stream = yt(link, { filter: filter})
+    filename = filter === 'audioandvideo' ? filename : filename.replace('.mp4', '.mp3');
+    const writeStream = fs.createWriteStream(filename)
+    stream.pipe(writeStream)
+    .on("finish",()=>{
+        res.download(filename, (err)=>{
+            if(err){
+    
+            }else{
+                console.log("yo")
+                fs.unlinkSync(filename)
+            }
+        })
+    })
+}else{
+    res.status(400).send("Bad request")
+}
+})
 
 app.post("/", (req,res)=>{
   const {name, email, tel, msg} = req.body;
