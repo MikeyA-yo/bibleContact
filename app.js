@@ -157,8 +157,8 @@ app.get("/ytl/dl",( req, res)=>{
             if(err){
               console.log(err)
             }else{
-                console.log("yo")
-                fs.unlinkSync(filename)
+                fs.unlinkSync(filename);
+                console.log("yo");
             }
         })
     })
