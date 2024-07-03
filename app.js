@@ -155,6 +155,7 @@ app.get("/ytl/dl",( req, res)=>{
     .on("finish",()=>{
         res.download(filename, (err)=>{
             if(err){
+              fs.unlinkSync(filename);
               console.log(err)
             }else{
                 fs.unlinkSync(filename);
