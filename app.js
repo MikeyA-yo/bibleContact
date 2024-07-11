@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors")
 const nodemailer = require("nodemailer");
 const fs = require("node:fs")
-const yt = require("ytdl-core");
+const yt = require("@distube/ytdl-core");
 require('dotenv').config()
 app.use(express.json());
 
