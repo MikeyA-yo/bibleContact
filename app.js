@@ -148,7 +148,7 @@ app.get("/ytl/dl", (req, res) => {
   if (req.query.link) {
     const { link } = req.query;
     const filter = req.query.filter === "mp3" ? "audioonly" : "audioandvideo";
-    const agent = yt.createAgent(cookies)
+    const agent = yt.createAgent(cookies.map(cookie => ({name:cookie.name, value: cookie.value})))
     const stream = yt(link, { filter: filter, agent });
     filename =
       filter === "audioandvideo" ? filename : filename.replace(".mp4", ".mp3");
@@ -185,7 +185,7 @@ app.post("/reminder", (req, res) => {
   res.json({ emails: emailsSent });
 });
 app.listen(process.env.PORT || 3001, () => {
-  console.log("Running on port ", process.env.PORT);
+  console.log("Running on port ", (process.env.PORT || 3001));
 });
 
 var cookies = [
